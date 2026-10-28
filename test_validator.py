@@ -1,6 +1,7 @@
 import pytest
+from unittest.mock import mock_open
 
-from validator import validate_log_line, get_text_file_validation_summary
+from validator import validate_log_line, validate_log_file, get_text_file_validation_summary
 
 def test_validate_log_line_success():
     line = "2026-10-28 10:00:00 INFO System started succesfully"
@@ -28,3 +29,26 @@ def test_get_text_file_validation_summary():
     assert "Total Lines Processed: 10" in content
     assert "Valid Lines: 8" in content
     assert "Error Lines: 2" in content
+
+
+def test_validate_log_file_not_found():
+
+    with pytest.raises(FileNotFoundError):
+        validate_log_file("non_existent_file_12345.log")
+
+
+def test_validate_log_file_is_a_directory(tmp_path):
+
+    with pytest.raises(IsADirectoryError):
+        validate_log_file(tmp_path)
+
+
+def test_validate_log_file_permission_error(monkeypatch):
+
+    m = mock_open()
+    m.side_effect = PermissionError
+
+    monkeypatch.setattr("builtins.open", m)
+
+    with pytest.raises(PermissionError):
+        validate_log_file("secret_log.log")

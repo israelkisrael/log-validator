@@ -1,4 +1,4 @@
-
+import os
 
 
 def validate_log_line(log_entry: str) -> bool:
@@ -19,26 +19,26 @@ def validate_log_line(log_entry: str) -> bool:
 def validate_log_file(log_file_path: str)  -> dict:
     """ Validate the file results and return a dictionary with the validation results. """
 
+    if os.path.isdir(log_file_path):
+        raise IsADirectoryError(f"Is a directory: '{log_file_path}'")
+    
     validate_results = {
         "errors_found": 0,
         "valid_lines": 0,
         "line_count": 0
     }
 
-    try:
-        with open(log_file_path, 'r') as log_file:
-            for line in log_file:
-                validate_results["line_count"] += 1
-                if validate_log_line(line):
-                    validate_results["valid_lines"] += 1
-                else: 
-                    validate_results["errors_found"] += 1
-    except FileNotFoundError:
-        print(f"Error: The file '{log_file_path}'was not found.")
-    except Exception as e:
-        print(f"An error occurred while validating the log file: {e}")
-
+    
+    with open(log_file_path, 'r') as log_file:
+        for line in log_file:
+            validate_results["line_count"] += 1
+            if validate_log_line(line):
+                validate_results["valid_lines"] += 1
+            else: 
+                validate_results["errors_found"] += 1
+    
     return validate_results 
+
 
 def get_text_file_validation_summary(log_file_summary_dict: dict)  -> str:
     """ Returns a text file validation summary based on the validation reports. """

@@ -1,0 +1,4 @@
+==========Log File Validation Summary==========
+Total Lines Processed: 10
+Valid Lines: 8
+Error Lines: 2
