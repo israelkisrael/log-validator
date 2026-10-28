@@ -39,3 +39,15 @@ def validate_log_file(log_file_path: str)  -> dict:
         print(f"An error occurred while validating the log file: {e}")
 
     return validate_results 
+
+def get_text_file_validation_summary(log_file_summary_dict: dict)  -> str:
+    """ Returns a text file validation summary based on the validation reports. """
+
+    file_path = "validation_summary_file.txt"
+    with open(file_path , 'w') as summary_file:
+        summary_file.write(f"==========Log File Validation Summary==========\n")
+        summary_file.write(f"Total Lines Processed: {log_file_summary_dict['line_count']}\n")
+        summary_file.write(f"Valid Lines: {log_file_summary_dict['valid_lines']}\n")
+        summary_file.write(f"Error Lines: {log_file_summary_dict['errors_found']}\n")
+
+    return file_path
